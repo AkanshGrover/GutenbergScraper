@@ -153,29 +153,30 @@ def downloader(base_url, what, onefile=False, number="-1", author=None, subject=
         download_files(base_url, book_urls, onefile, file_type)
 
 def main():
-    parser = argparse.ArgumentParser(prog="GutenbergScraper.py",add_help=False)
-    parser.add_argument("-a", "--author", type=int)
-    parser.add_argument("-o", "--onefile", action="store_true")
-    parser.add_argument("-f", "--file_type", type=str, default="text")
-    parser.add_argument("-h", "--help", action="store_true")
-    parser.add_argument("-u", "--update", action="store_true")
-    parser.add_argument("-l", "--list", action="store_true")
-    parser.add_argument("-s", "--search", type=str)
-    parser.add_argument("-n", "--number", type=int, default="-1")
-
-    args = parser.parse_args()
-
-    if not args.author and not args.help and not args.update and not args.list and not args.search:
-        parser.error("Author ID is required.")
-
-    if args.onefile and args.file_type != "text":
-        parser.error("The --onefile option only supports the 'text' file format.")
-
-    if args.file_type not in ["text", "kindle", "old_kindle", "epub3", "epub", "epub_noimages", "zip", "mp3", "speex", "ogg", "itunes"]:
-        parser.error("Chosen file type is not supported.")
-
-    if args.help:
-        print("""Usage: GutenbergScraper.py [-h] [-a AUTHOR_ID] [-o] [-f FILE_TYPE] [-u] [-l] [-s SUBJECT] [-n NUMBER]              
+    try:
+        parser = argparse.ArgumentParser(prog="GutenbergScraper.py",add_help=False)
+        parser.add_argument("-a", "--author", type=int)
+        parser.add_argument("-o", "--onefile", action="store_true")
+        parser.add_argument("-f", "--file_type", type=str, default="text")
+        parser.add_argument("-h", "--help", action="store_true")
+        parser.add_argument("-u", "--update", action="store_true")
+        parser.add_argument("-l", "--list", action="store_true")
+        parser.add_argument("-s", "--search", type=str)
+        parser.add_argument("-n", "--number", type=int, default="-1")
+    
+        args = parser.parse_args()
+    
+        if not args.author and not args.help and not args.update and not args.list and not args.search:
+            parser.error("Author ID is required.")
+    
+        if args.onefile and args.file_type != "text":
+            parser.error("The --onefile option only supports the 'text' file format.")
+    
+        if args.file_type not in ["text", "kindle", "old_kindle", "epub3", "epub", "epub_noimages", "zip", "mp3", "speex", "ogg", "itunes"]:
+            parser.error("Chosen file type is not supported.")
+    
+        if args.help:
+            print("""Usage: GutenbergScraper.py [-h] [-a AUTHOR_ID] [-o] [-f FILE_TYPE] [-u] [-l] [-s SUBJECT] [-n NUMBER]              
 Options:
   -h, --help                  Show this help message and exit
   -a AUTHOR_ID, --author AUTHOR_ID  Specify the author ID
@@ -199,24 +200,26 @@ Supported formats:
  10) ogg            For Ogg Vorbis audio
  11) itunes         For Apple iTunes audiobooks""")
 
-    if not os.path.isfile("subjects.csv"):
-        update_search_subjects()
-
-    loaded_subject = subject_loader()
-
-    base_url = 'https://www.gutenberg.org'
-    r = requests.get(base_url)
-    if not args.help and r.ok and not args.update and not args.list and not args.search:
-        downloader(what="a", onefile=args.onefile, number=args.number, base_url=base_url, author=args.author, file_type=args.file_type)
-    elif args.update:
-        update_search_subjects()
+        if not os.path.isfile("subjects.csv"):
+            update_search_subjects()
+    
         loaded_subject = subject_loader()
-    elif args.list:
-        for x in loaded_subject.keys():
-            print(x)
-    elif args.search:
-        s = search_subject(args.search, loaded_subject)[1]
-        downloader(what="s", onefile=args.onefile, number=args.number, base_url=base_url, subject=s, file_type=args.file_type)
+    
+        base_url = 'https://www.gutenberg.org'
+        r = requests.get(base_url)
+        if not args.help and r.ok and not args.update and not args.list and not args.search:
+            downloader(what="a", onefile=args.onefile, number=args.number, base_url=base_url, author=args.author, file_type=args.file_type)
+        elif args.update:
+            update_search_subjects()
+            loaded_subject = subject_loader()
+        elif args.list:
+            for x in loaded_subject.keys():
+                print(x)
+        elif args.search:
+            s = search_subject(args.search, loaded_subject)[1]
+            downloader(what="s", onefile=args.onefile, number=args.number, base_url=base_url, subject=s, file_type=args.file_type)
+    except KeyboardInterrupt:
+        print("Exiting due to a KeyboardInterrupt.")
 
 if __name__ == "__main__":
     main()

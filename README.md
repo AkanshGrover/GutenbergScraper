@@ -1,5 +1,5 @@
 # GutenbergScraper
-GutenbergScraper is a simple command-line tool for scraping books from [Project Gutenberg](https://www.gutenberg.org/). It allows users to download books in various formats by specifying the author's ID.
+GutenbergScraper is a simple command-line tool for scraping books from [Project Gutenberg](https://www.gutenberg.org/). It allows users to download books in various formats by specifying the author's ID or by specifying the subject/genre.
 
 ## Installation
 1. Clone this repository:
@@ -15,7 +15,7 @@ GutenbergScraper is a simple command-line tool for scraping books from [Project 
 ## Usage
 Run the script using Python:
 ```sh
-python  GutenbergScraper.py [-h] [-a AUTHOR_ID] [-o] [-f FILE_TYPE]
+python  GutenbergScraper.py [-h] [-a AUTHOR_ID] [-o] [-f FILE_TYPE] [-u] [-l] [-s SUBJECT] [-n NUMBER]
 ```
 
 ### Arguments:
@@ -23,6 +23,10 @@ python  GutenbergScraper.py [-h] [-a AUTHOR_ID] [-o] [-f FILE_TYPE]
 -  `-a AUTHOR_ID` : Author ID from the Gutenberg website.
 -  `-o` : Downloads all ebooks from the author and saves them in a single file (only for text format).
 -  `-f FILE_TYPE` : Specify the file format.
+-  `-u, --update` : Updates the list of search topics
+-  `-l, --list`   : Lists all the subjects
+-  `-s SUBJECT, --search SUBJECT` : Search different subjects
+-  `-n NUMBER, --number NUMBER` : Specify the number of ebooks to download
 
 ### Supported File Types:
 1.  `text` - Default plain text format
